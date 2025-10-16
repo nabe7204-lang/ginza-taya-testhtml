@@ -1,0 +1,626 @@
+@charset "UTF-8";
+/* =========================================
+   NABE.CSS - GINZA TAYA特集ページ
+      見出し・リード文スタイル
+   ========================================= */
+
+/* ---- ベース設定 ---- */
+body {
+  font-family: "Hiragino Mincho ProN", "游明朝", "Yu Mincho", serif;
+  color: #444444;
+  background-color: #fff;
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+  margin: 0;
+  padding: 0;
+}
+
+/* ゴールドトーン */
+:root {
+  --taya-gold: #a7945f;
+  --taya-black:#444444;
+}
+
+/* ---- h1見出し ---- */
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 50px auto 10px;
+  letter-spacing: 0.08em;
+}
+
+h1 span {
+  display: block;
+  font-size: 1rem;
+  color: var(--taya-gold);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-top: 8px;
+}
+
+/* リード文（h1下） */
+.h1-lead {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 60px;
+}
+
+/* ---- h2見出し ---- */
+h2 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 10px auto 10px;
+  letter-spacing: 0.06em;
+}
+
+h2 span {
+  display: block;
+  color: var(--taya-gold);
+  font-size: 0.9rem;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  margin-top: 5px;
+}
+
+.h2-lead {
+  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 50px;
+}
+
+/* ---- h3見出し（左揃えタイプ）---- */
+h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  border-left: 4px solid var(--taya-gold);
+  padding-left: 10px;
+  margin: 50px 0 10px;
+  letter-spacing: 0.05em;
+  text-align: left;
+}
+
+/* リード（左揃えタイプ） */
+.h3-lead-left {
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+  padding-left: 14px;
+  text-align: left;
+}
+
+/* ---- h3-sub（センタータイプ）---- */
+.h3-sub {
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-align: center;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  letter-spacing: 0.08em;
+  line-height: 1.9;
+  margin: 0 auto 15px;
+  border: none;
+  padding: 0;
+  width: 100%;
+  display: block;
+}
+
+/* リード（センタータイプ） */
+.h3-lead-center {
+  text-align: center;
+  padding-left: 0;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  color: #555;
+}
+
+/* ---- スマホ調整 ---- */
+@media screen and (max-width: 768px) {
+  h3 {
+    font-size: 1.2rem;
+  }
+  .h3-sub {
+    font-size: 1.25rem !important;
+    line-height: 1.8;
+  }
+  .h3-lead-left,
+  .h3-lead-center {
+    font-size: 0.9rem;
+  }
+}
+
+
+/* ---- センター見出し ---- */
+.title-sub {
+  font-size: 1.4rem;  /* ← 元より少し大きめで固定 */
+  font-weight: 500;
+  text-align: center;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  letter-spacing: 0.08em;
+  line-height: 1.9;
+  margin: 0 auto 15px;
+  border: none;
+  padding: 0;
+  width: 100%;
+  display: block;
+}
+
+/* ---- センターリード ---- */
+.lead-sub {
+  text-align: center;
+  padding-left: 0;
+  font-size: 1rem;
+  margin-top: 10px;
+  color: #555;
+}
+
+/* ---- スマホ調整 ---- */
+@media screen and (max-width: 768px) {
+  .title-sub {
+    font-size: 1.3rem !important; /* ← 強制上書き */
+    line-height: 1.8;
+    text-align: center !important;
+  }
+
+  .lead-sub {
+    font-size: 0.95rem !important;
+    text-align: center !important;
+  }
+
+  /* justify指定がセンターを潰さないように */
+  .block-text p:not(.title-sub):not(.lead-sub) {
+    font-size: 0.95em;
+    text-align: justify;
+  }
+}
+
+
+
+/* =========================================
+   TAYA汎用ブロック構成スタイル
+   ========================================= */
+
+/* ---- 基本セクション ---- */
+.block {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 0 20px;
+  line-height: 1.9;
+}
+
+/* ---- セクション内リード文 ---- */
+.block .lead {
+  text-align: center;
+  font-size: 1rem;
+  margin: 20px 0 60px;
+}
+
+/* ---- 2カラム構成（高さを揃える版） ---- */
+.block-2col {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* 上端揃え */
+  gap: 40px;
+}
+
+.block-text h3 {
+  margin-top: 0; /* h3の余白を消す */
+  line-height: 1.6;
+}
+
+
+.block-visual,
+.block-text {
+  flex: 1;
+}
+
+.block-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* ← 画像を枠いっぱいに美しく表示 */
+  border-radius: 0px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* スマホ対応（縦並び） */
+@media screen and (max-width: 768px) {
+  .block-2col {
+    flex-direction: column;
+  }
+  .block-visual img {
+    height: auto;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .block {
+    margin: 60px auto;
+  }
+  .block-2col {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  /* ← これが問題。全pタグにjustifyしてる */
+  .block-text p {
+    font-size: 0.95em;
+    text-align: justify;
+  }
+
+  /* ==== 修正：センター系は除外 ==== */
+  .block-text p.title-sub,
+  .block-text p.lead-sub {
+    text-align: center !important;
+  }
+
+  .block .lead {
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+  }
+}
+
+/* =========================================
+   2カラム：写真＋文章カード
+   ========================================= */
+.grid-2up {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2カラム */
+  gap: 40px;
+}
+
+/* カード全体：高さ揃えのため縦flex */
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0px;
+  overflow: hidden; /* 角丸に画像を沿わせる */
+}
+
+/* 画像 */
+.card-media img {
+  width: 100%;
+  height: auto;        /* 自然比率 */
+  display: block;
+  border-radius: 0px;  /* 角丸を保つ（お好みで） */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card-media a {
+  display: block;
+  position: relative;
+  transition: transform 0.0s ease, opacity 0.0s ease;
+}
+
+.card-media a:hover {
+  transform: scale(1.02); /* 少し拡大 */
+  opacity: 0.9;            /* うっすらトーンダウン */
+}
+
+/* テキスト部 */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 0 0;   /* 画像との間に少し余白 */
+}
+
+/* ボタンをカード下に揃えたい場合 */
+.card-body .btn-wrap {
+  margin-top: auto;
+  text-align: center;  /* 中央配置（左寄せなら削除） */
+}
+
+/* スマホ：1カラムに */
+@media screen and (max-width: 768px) {
+  .grid-2up {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+
+/* =========================================
+   単一ビジュアルブロック（1枚写真用）
+   ========================================= */
+
+/* 中央寄せ・余白つきで配置 */
+.block-photo {
+  max-width: 600px;        /* 写真の最大幅 */
+  margin: 60px auto;        /* 上下の余白＋中央寄せ */
+  padding: 0 20px;          /* スマホ用の左右余白 */
+  text-align: center;       /* 中央寄せ */
+}
+
+.block-photo img {
+  width: 100%;              /* 画面幅にフィット */
+  height: auto;
+  border-radius: 0px;       /* 角を少し丸めて上品に */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* ふんわり影 */
+  display: block;
+  margin: 0 auto;           /* ブロック中央に */
+}
+
+/* スマホでの見え方調整 */
+@media screen and (max-width: 600px) {
+  .block-photo {
+    margin: 40px auto;
+    padding: 0 10px;
+  }
+  .block-photo img {
+    border-radius: 0px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* =========================================
+   ブロック余白調整用の補助クラス（TAYA汎用）
+   ========================================= */
+
+/* ---- 標準（リセット） ---- */
+.block {
+  margin: 80px auto;
+  /* ← 基本値はそのままでOK */
+}
+
+/* ---- 余白なし ---- */
+.block-tight {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ---- 上だけ詰める ---- */
+.block-tight-top {
+  margin-top: 0 !important;
+}
+
+/* ---- 下だけ詰める ---- */
+.block-tight-bottom {
+  margin-bottom: 0 !important;
+}
+
+/* ---- 半分（軽めに詰める）---- */
+.block-half {
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
+}
+
+/* ---- 少し多め ---- */
+.block-wide {
+  margin-top: 100px !important;
+  margin-bottom: 100px !important;
+}
+
+/* ---- かなり多め（ビジュアル間などで使用）---- */
+.block-extra {
+  margin-top: 160px !important;
+  margin-bottom: 160px !important;
+}
+
+/* ---- 片側だけ多め ---- */
+.block-wide-top {
+  margin-top: 160px !important;
+}
+
+.block-wide-bottom {
+  margin-bottom: 120px !important;
+}
+
+
+/* =========================================
+   サブ画像（h3-lead下に表示）
+   ========================================= */
+.block-subimg {
+  text-align: center;
+  margin: 25px 0 20px;
+}
+
+.block-subimg img {
+  width: 80%;                 /* 親要素に対して8割サイズ */
+  max-width: 600px;           /* 横に広がりすぎない */
+  height: auto;
+  border-radius: 0px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.4s ease;
+}
+
+/* スマホ対応 */
+@media screen and (max-width: 768px) {
+  .block-subimg img {
+    width: 100%;
+    max-width: none;
+    border-radius: 0px;
+  }
+}
+
+
+
+/* =========================================
+   商品ページへボタンスタイル（TAYAブランドトーン）
+   ========================================= */
+.taya-btn {
+  display: inline-block;
+  background-color: var(--taya-gold); /* ブランドカラー */
+  color: #fff;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  padding: 8px 70px;
+  border-radius: 0em; /* 丸みを帯びた上品な形 */
+  text-decoration: none;
+  transition: all 0.3s ease;8  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.taya-btn:hover {
+  background-color: #8e8052; /* 濃いめゴールドでhover感 */
+}
+
+/* ボタン中央寄せラッパー */
+.btn-wrap {
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+/* =========================================
+   メインビジュアル（左下テキスト＋影付き）
+   ========================================= */
+
+.main-visual {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.main-visual img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* 左下配置のキャプション */
+.main-visual .caption {
+  position: absolute;
+  bottom: 6%;                /* 画面の下からの距離（調整可） */
+  left: 6%;                  /* 左からの距離（調整可） */
+  color: #fff;               /* 白文字 */
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6); /* ← 文字に柔らかい影 */
+  max-width: 80%;            /* 長文でもはみ出さない */
+}
+
+/* 小さめの英語サブタイトルを入れる場合 */
+.main-visual .caption span {
+  display: block;
+  font-size: 1.0rem;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0.05em;
+  margin-top: 6px;
+  opacity: 0.9;
+}
+
+/* スマホ対応 */
+@media screen and (max-width: 768px) {
+  .main-visual .caption {
+    font-size: 1.2rem;
+    bottom: 5%;
+    left: 5%;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+  }
+  .main-visual .caption span {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
+/* =========================================
+   干支ナビ（eto-nav）
+   ========================================= */
+.eto-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* ← スマホで折り返し可能に */
+  gap: 8px 24px;
+  margin: 30px auto 50px;
+  text-align: center;
+}
+
+.eto-nav a {
+  display: inline-block;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 1.1rem;
+  color: #222;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  padding-bottom: 3px;
+}
+
+.eto-nav a:hover {
+  color: var(--taya-gold);
+  border-bottom: 2px solid var(--taya-gold);
+}
+
+/* PCでは横一列 */
+@media screen and (min-width: 769px) {
+  .eto-nav {
+    flex-wrap: nowrap;
+    gap: 30px;
+  }
+}
+
+/* スマホでは3列表示 */
+@media screen and (max-width: 768px) {
+  .eto-nav a {
+    flex: 1 1 calc(33.33% - 16px);
+    text-align: center;
+  }
+}
+html {
+  scroll-behavior: smooth;
+}
+
+.eto-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+  margin: 30px auto 50px;
+}
+
+.eto-nav a {
+  text-decoration: none;
+  color: #222;
+  font-size: 1.1rem;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 3px;
+  transition: 0.3s;
+}
+
+.eto-nav a:hover {
+  color: var(--taya-gold);
+  border-bottom: 2px solid var(--taya-gold);
+}
+
+/* PC横並び / スマホ3列 */
+@media screen and (min-width: 769px) {
+  .eto-nav {
+    flex-wrap: nowrap;
+  }
+}
+@media screen and (max-width: 768px) {
+  .eto-nav a {
+    flex: 1 1 calc(33.33% - 16px);
+    text-align: center;
+  }
+}
+
+
+/* =========================================
+   罫線（line）
+   ========================================= */
+.taya-line {
+  border: none;               /* デフォルトの立体線を消す */
+  border-top: 1px solid #383838; /* 上品な黒ライン */
+  margin: 40px auto;          /* 上下の余白 */
+  width: 65%;                 /* ページ幅の9割までの長さ */
+}
+
+/* =========================================
+グレー背景を完全にリセット 
+========================================= */
+h2 {
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+

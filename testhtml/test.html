@@ -1,0 +1,382 @@
+<div class="ascot">
+
+<h2>新作アスコット01</h2>
+
+<p>テストだよ。新作見てね</p>
+
+</div>
+
+<!-- 商品リスト（これがないと #items が見つからない） -->
+<div id="items" class="item-list"></div>  <!--同じページで2回使う時は id="items" を別名にする。id="ascot"　// ===== 4) 実行 =====のconst名も-->
+
+<!-- スクリプトを後ろに配置 -->
+<script src="all_items.js" defer></script>　<!--同じページ内で二回スクリプトを使うときは二回目のスクリプトからこの記述を消して。二回読んじゃうから-->
+
+<script defer>
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof allItems === 'undefined') {
+    console.error("❌ allItems が見つかりません。");
+    return;
+  }
+
+  console.log("allItems:", allItems.length, "件");
+
+  // ===== 1) フィルター条件 =====
+  const filterConditions = {
+    id: "",                        // 部分一致OK
+    id_list: [],                   // 完全一致リスト（例: ["422-028-011-071", "422-028-013-071"]）
+    name: "",         // 部分一致（例: "鶴|つる"）（複数条件は|を使ってね）
+    category: "ascot",             // カテゴリ
+    category2: "",                 // サブカテゴリ
+    color: "",                     // 色（例: "ネイビー"）
+    material: "",                  // 素材
+    origin: "",                    // 原産国（例: "日本"）
+    price_min: "",                 // 最低価格
+    price_max: "",                 // 最高価格
+    description: ""                // 商品説明に含まれる文字
+  };
+
+  // ===== 2) サポート関数 =====
+  function safeIncludes(hay, needle) {
+    if (needle === "") return true;
+    if (hay == null) return false;
+
+  // 「|」で区切られた複数キーワードに対応
+  const pattern = new RegExp(needle.split("|").join("|"), "i");
+  return pattern.test(String(hay));
+  }
+
+  // ===== 3) フィルター本体 =====
+  function filterItems(items, cond) {
+    const out = [];
+
+    for (const it of items) {
+      if (cond.id_list.length && !cond.id_list.includes(it.id)) continue;
+      if (!safeIncludes(it.id, cond.id)) continue;
+      if (!safeIncludes(it.name, cond.name)) continue;
+      if (!safeIncludes(it.category, cond.category)) continue;
+      if (!safeIncludes(it.category2, cond.category2)) continue;
+      if (!safeIncludes(it.color, cond.color)) continue;
+      if (!safeIncludes(it.material, cond.material)) continue;
+      if (!safeIncludes(it.origin, cond.origin)) continue;
+      if (cond.description && !safeIncludes(it.description, cond.description)) continue;
+      if (cond.price_min && Number(it.price) < cond.price_min) continue;
+      if (cond.price_max && Number(it.price) > cond.price_max) continue;
+      if (it.stock_flag != 1 && it.stock_flag != "1") continue;
+      out.push(it);
+    }
+    console.log("filtered:", out.length, "件");
+    return out;
+  }
+
+ // ===== 4) 実行 =====
+  const filtered = filterItems(allItems, filterConditions);
+  const container = document.getElementById("items");
+  if (!container) return;
+
+  let displayCount = 4; // 初期表示件数
+
+ 
+// ===== 4.5) 同柄の重複除去 =====
+function uniqueByPattern(items) {
+  const seen = new Set();
+  const unique = [];
+  for (const it of items) {
+    const key = it.id.replace(/-\d{3}$/, ""); // 末尾3桁をカット
+    if (!seen.has(key)) {
+      seen.add(key);
+      unique.push(it);
+    }
+  }
+  return unique;
+}
+
+// ===== 5) 表示レンダリング関数 =====
+function renderItems() {
+  const unique = uniqueByPattern(filtered); // 同柄1つずつ
+  let showItems = [];
+
+  // --- ステップ1：初期表示（重複除外） ---
+  if (displayCount <= unique.length) {
+    showItems = unique.slice(0, displayCount);
+  } 
+  // --- ステップ2：2回目以降（色違い含め順次追加） ---
+  else {
+    const extraCount = displayCount - unique.length;
+
+    // まず全てのuniqueをベースに
+    showItems = [...unique];
+
+    // uniqueのIDをSet化（既に出ている柄）
+    const seen = new Set(unique.map(it => it.id.replace(/-\d{3}$/, "")));
+
+    // filtered全体から「uniqueで出た柄以外 or 同柄の色違い」を順に追加
+    const remaining = filtered.filter(it => !seen.has(it.id.replace(/-\d{3}$/, "")) || !showItems.includes(it));
+
+    // 重複を避けながら extraCount 件だけ追加
+    showItems = [...showItems, ...remaining.slice(0, extraCount)];
+  }
+
+  // --- HTML生成 ---
+  container.innerHTML = showItems.map(i => {
+    let hoverImg = i.img_main;
+    if (Array.isArray(i.img_sub)) {
+      const found = i.img_sub.find(path => path.includes("/img/goods/9/"));
+      if (found) hoverImg = found;
+    }
+
+    const newLabel = (i.new_icon == 1 || i.new_icon == "1")
+      ? '<span class="label-new"></span>'
+      : '';
+
+    return `
+      <a class="item" href="${i.url}" target="_blank" rel="noopener">
+        <div class="img-wrap">
+          ${newLabel}
+          <img src="${i.img_main}" alt="${i.name}"
+               onmouseover="this.src='${hoverImg}'"
+               onmouseout="this.src='${i.img_main}'">
+        </div>
+        <div class="item-info">
+          <div class="item-name">${i.name}</div>
+          <div class="item-price">¥${Number(i.price).toLocaleString()}(税込)</div>
+        </div>
+      </a>
+    `;
+  }).join("");
+
+  // --- ボタン制御 ---
+  if (showItems.length >= filtered.length) {
+    moreBtn.style.display = "none";
+  } else {
+    moreBtn.style.display = "block";
+  }
+}
+
+  // ===== 6) 「もっと見る」ボタン =====
+  const moreBtn = document.createElement("div");
+  moreBtn.className = "more-button";
+  moreBtn.innerHTML = `<button>もっと見る</button>`;
+  container.after(moreBtn);
+
+  moreBtn.addEventListener("click", () => {
+    displayCount += 4;
+    renderItems();
+  });
+
+  // 初回描画
+  renderItems();
+});
+</script>
+
+
+
+<div class="ascot">
+
+<h2>新作ネクタイ</h2>
+
+<p>テストだよ。新作見てね</p>
+
+</div>
+
+<div id="tie" class="item-list"></div>
+
+<script defer>
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof allItems === 'undefined') {
+    console.error("❌ allItems が見つかりません。");
+    return;
+  }
+
+  console.log("allItems:", allItems.length, "件");
+
+  // ===== 1) フィルター条件 =====
+  const filterConditions = {
+    id: "",                        // 部分一致OK
+    id_list: [],                   // 完全一致リスト（例: ["422-028-011-071", "422-028-013-071"]）
+    name: "",         // 部分一致（例: "鶴|つる"）（複数条件は|を使ってね）
+    category: "tie",             // カテゴリ
+    category2: "",                 // サブカテゴリ
+    color: "",                     // 色（例: "ネイビー"）
+    material: "",                  // 素材
+    origin: "",                    // 原産国（例: "日本"）
+    price_min: "",                 // 最低価格
+    price_max: "",                 // 最高価格
+    description: ""                // 商品説明に含まれる文字
+  };
+
+  // ===== 2) サポート関数 =====
+  function safeIncludes(hay, needle) {
+    if (needle === "") return true;
+    if (hay == null) return false;
+  // 「|」で区切られた複数キーワードに対応
+  const pattern = new RegExp(needle.split("|").join("|"), "i");
+  return pattern.test(String(hay));
+  }
+
+  // ===== 3) フィルター本体 =====
+  function filterItems(items, cond) {
+    const out = [];
+
+    for (const it of items) {
+      if (cond.id_list.length && !cond.id_list.includes(it.id)) continue;
+      if (!safeIncludes(it.id, cond.id)) continue;
+      if (!safeIncludes(it.name, cond.name)) continue;
+      if (!safeIncludes(it.category, cond.category)) continue;
+      if (!safeIncludes(it.category2, cond.category2)) continue;
+      if (!safeIncludes(it.color, cond.color)) continue;
+      if (!safeIncludes(it.material, cond.material)) continue;
+      if (!safeIncludes(it.origin, cond.origin)) continue;
+      if (cond.description && !safeIncludes(it.description, cond.description)) continue;
+      if (cond.price_min && Number(it.price) < cond.price_min) continue;
+      if (cond.price_max && Number(it.price) > cond.price_max) continue;
+      if (it.stock_flag != 1 && it.stock_flag != "1") continue;
+      out.push(it);
+    }
+    console.log("filtered:", out.length, "件");
+    return out;
+  }
+
+  // ===== 4) 実行 =====
+  const filtered = filterItems(allItems, filterConditions);
+
+  const container = document.getElementById("tie");
+  if (!container) {
+    console.error("❌ #items が見つかりません。");
+    return;
+  }
+
+  container.innerHTML = filtered.map(i => {
+    let hoverImg = i.img_main;
+    if (Array.isArray(i.img_sub)) {
+      const found = i.img_sub.find(path => path.includes("/img/goods/9/"));
+      if (found) hoverImg = found;
+    }
+
+    return `
+      <a class="item" href="${i.url}" target="_blank" rel="noopener">
+        <div class="img-wrap">
+          <img src="${i.img_main}" alt="${i.name}"
+               onmouseover="this.src='${hoverImg}'"
+               onmouseout="this.src='${i.img_main}'">
+        </div>
+        <div class="item-info">
+          <div class="item-name">${i.name}</div>
+          <div class="item-price">¥${Number(i.price).toLocaleString()}(税込)</div>
+        </div>
+      </a>
+    `;
+  }).join("");
+});
+</script>
+
+
+<style>
+/* 調整しやすいように変数化 */
+:root {
+  --item-w: 180px;   /* アイテムの横幅（サイズ微調整はここだけでOK） */
+  --gap: 24px;       /* アイテム間の余白 */
+}
+
+/* コンテナ：中央に幅を固定して左右を大きく空ける */
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;                 /* 中央寄せ */
+  gap: var(--gap);
+  max-width: calc((var(--item-w) * 4) + (var(--gap) * 3)); /* 4個＋余白3つ分 */
+  margin: 20px auto;                       /* 画面中央に配置（左右は余白） */
+}
+
+/* アイテム：固定幅で折り返し */
+.item {
+  flex: 0 0 var(--item-w);                 /* 1個の幅を固定（= 最大4個/行） */
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  transition: transform .3s ease;
+  padding-bottom: 20px; /* ← ここで下方向に余白 */
+}
+
+.item:hover { transform: translateY(-4px); }
+
+.img-wrap img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+
+.item-info {
+  margin-top: 14px;
+  width: 100%;
+}
+
+/* 商品名 */
+.item-name {
+  font-size: 14px;
+  font-family: "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro",
+               "游ゴシック", YuGothic, "メイリオ", "Meiryo", sans-serif;
+  line-height: 1.5;
+  text-align: left;
+  color: #222;
+  margin-bottom: 5px;
+}
+
+/* プライス */
+.item-price {
+  font-size: 12px;
+  font-family: "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro",
+               "游ゴシック", YuGothic, "メイリオ", "Meiryo", sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-align: left;
+  color: #444;
+  font-weight: bold;
+}
+
+/* ラベル */
+.img-wrap {
+  position: relative;  /* ← ラベルの基準位置を画像に固定！ */
+  display: block;
+}
+
+.label-new {
+  position: absolute;
+  top: -30px;
+  left: 0px;
+  width: 38px;
+  height: 38px;
+  background: url("https://www.ginza-taya.co.jp/img/icon/new_01.png") no-repeat center / contain;
+  pointer-events: none;
+  opacity: 1;               /* 常に表示（hover関係なし） */
+  transition: opacity 0.3s; /* フェードで出すなら */
+}
+
+/* オンマウス時のエフェクトを加えたい場合はこうもできる */
+.item:hover .label-new {
+  opacity: 0.8; /* ほんの少し変化させて高級感UP */
+}
+
+
+/* ボタン */
+.more-button {
+  text-align: center;
+  margin-top: 20px;
+}
+.more-button button {
+  background: #a7945f;
+  color: #fff;
+  border: none;
+  padding: 10px 60px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.more-button button:hover {
+  background: #8e8052;
+}
+
+
+</style>
+
